@@ -1,46 +1,47 @@
-apiVersion: v1
-data:
-  mapRoles: |
-    - groups:
-      - system:bootstrappers
-      - system:nodes
-      rolearn: arn:aws:iam::931728113463:role/EKSWorkerNodeRole
-      username: system:node:{{EC2PrivateDNSName}}
-    - groups:
-      - system:masters
-      rolearn: arn:aws:iam::931728113463:role/service-role/codebuild-cicd-eks-build-service-role
-      username: codebuild-cicd-eks-build-service-role
-  mapUsers: |
-    []
-kind: ConfigMap
-metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","data":{"mapRoles":"- rolearn: arn:aws:iam::120717539064:role/service-role/codebuild-cicddemobuildproject-service-role\n  username: codebuild-cicddemobuildproject-service-role\n  groups:\n    - system:masters\n    \n- rolearn: arn:aws:iam::120717539064:role/eksctl-cicd-demo-nodegroup-ng-1-NodeInstanceRole-AHYQIRO1R4HE\n  username: system:node:{{EC2PrivateDNSName}}\n  groups:\n    - system:bootstrappers\n    - system:nodes\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"aws-auth","namespace":"kube-system"}}
-  creationTimestamp: "2021-04-27T20:43:23Z"
-  managedFields:
-  - apiVersion: v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:annotations:
-          .: {}
-          f:kubectl.kubernetes.io/last-applied-configuration: {}
-    manager: kubectl
-    operation: Update
-    time: "2021-04-27T21:20:12Z"
-  - apiVersion: v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:data:
-        .: {}
-        f:mapRoles: {}
-        f:mapUsers: {}
-    manager: eksctl
-    operation: Update
-    time: "2021-04-28T04:15:13Z"
-  name: aws-auth
-  namespace: kube-system
-  resourceVersion: "98026"
-  selfLink: /api/v1/namespaces/kube-system/configmaps/aws-auth
-  uid: 414c6bae-79e4-4f24-a1d5-d30e615c904c
+version: 0.2
+run-as: root
+
+phases:
+
+  install:
+    commands:
+      - echo Installing app dependencies...
+      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl   
+      - chmod +x ./kubectl
+      - mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+      - echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+      - source ~/.bashrc
+      - echo 'Check kubectl version'
+      - kubectl version --short --client
+      - chmod +x eks_cicd/prereqs.sh
+      - sh eks_cicd/prereqs.sh
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon EKS...
+      - aws eks --region $AWS_DEFAULT_REGION update-kubeconfig --name $AWS_CLUSTER_NAME
+      - echo check config 
+      - kubectl config view --minify
+      - echo check kubectl access
+      - kubectl get svc
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
+      - docker pull $REPOSITORY_URI:$IMAGE_TAG
+      
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...          
+      - docker build --cache-from $REPOSITORY_URI:$IMAGE_TAG -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG 
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo Push the latest image to cluster
+      - kubectl apply -f eks_cicd/deployment.yaml
+      - kubectl rollout restart -f eks_cicd/deployment.yaml
