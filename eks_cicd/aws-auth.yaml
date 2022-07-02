@@ -8,21 +8,21 @@ data:
     - groups:
       - system:bootstrappers
       - system:nodes
-      rolearn: arn:aws:iam::931728113463:role/eksctl-cicd-demo-v2-nodegroup-eks-NodeInstanceRole-7D9AFFFFA5VP
+      rolearn: arn:aws:iam::931728113463:role/eksctl-cicd-demo-nodegroup-ng-1-NodeInstanceRole-1HW3NWOUSBRZR
       username: system:node:{{EC2PrivateDNSName}}
     - groups:
       - system:masters
-      rolearn: arn:aws:iam::931728113463:role/codebuild-cicd-eks-build-service-role
+      rolearn: arn:aws:iam::931728113463:role/codebuild-cicd-demo-buildproject-service-role
       username: codebuild-cicd-eks-build-service-role  
-     - groups:
-       - system:masters
-      rolearn: arn:aws:eks:us-east-2:931728113463:cluster/cicd-demo-v2
-      username: cicd-demo-v2   
+#     - groups:
+#       - system:masters
+#      rolearn: arn:aws:eks:us-east-2:931728113463:cluster/cicd-demo-v2
+#      username: cicd-demo-v2  	  
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2022-07-02T06:53:49Z"
+  creationTimestamp: "2022-07-02T13:08:11Z"
   name: aws-auth
   namespace: kube-system
-  resourceVersion: "1514"
+  resourceVersion: "1506"
   selfLink: /api/v1/namespaces/kube-system/configmaps/aws-auth
-  uid: 80c98ad9-0c93-4ba8-a5f4-61957a83d844
+  uid: 57e036d2-3046-4d45-a038-563dc159fc27
