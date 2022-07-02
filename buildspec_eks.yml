@@ -46,6 +46,6 @@ phases:
       - kubectl get deployment
 #      - kubectl get deployment -w
       - kubectl get pods
-      - kubectl apply-f service.yaml
+      - kubectl apply -f service.yaml
       - kubectl get svc
       - kubectl rollout restart -f eks_cicd/deployment.yaml
