@@ -1,3 +1,7 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
 apiVersion: v1
 data:
   mapRoles: |
@@ -6,41 +10,19 @@ data:
       - system:nodes
       rolearn: arn:aws:iam::931728113463:role/eksctl-cicd-demo-v2-nodegroup-eks-NodeInstanceRole-7D9AFFFFA5VP
       username: system:node:{{EC2PrivateDNSName}}
-     - groups:
-     - system:masters
-     rolearn: arn:aws:iam::931728113463:role/codebuild-cicd-eks-build-service-role
-     username: codebuild-cicd-eks-build-service-role
-  mapUsers: |
-    []
+    - groups:
+	  - system:masters
+      rolearn: arn:aws:iam::931728113463:role/codebuild-cicd-eks-build-service-role
+      username: codebuild-cicd-eks-build-service-role  
+#    - groups:
+#	  - system:masters
+#     rolearn: arn:aws:eks:us-east-2:931728113463:cluster/cicd-demo-v2
+#     username: cicd-demo-v2   
 kind: ConfigMap
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","data":{"mapRoles":"- arn:aws:iam::931728113463:role/codebuild-cicd-eks-build-service-role\n  username: codebuild-cicd-eks-build-service-role\n  groups:\n    - system:masters\n    \n- rolearn: arn:aws:iam::931728113463:role/EKSWorkerNodeRole  username: system:node:{{EC2PrivateDNSName}}\n  groups:\n    - system:bootstrappers\n    - system:nodes\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"aws-auth","namespace":"kube-system"}}
-  creationTimestamp: "2021-04-27T20:43:23Z"
-  managedFields:
-  - apiVersion: v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:annotations:
-          .: {}
-          f:kubectl.kubernetes.io/last-applied-configuration: {}
-    manager: kubectl
-    operation: Update
-    time: "2021-04-27T21:20:12Z"
-  - apiVersion: v1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:data:
-        .: {}
-        f:mapRoles: {}
-        f:mapUsers: {}
-    manager: eksctl
-    operation: Update
-    time: "2021-04-28T04:15:13Z"
+  creationTimestamp: "2022-07-02T06:53:49Z"
   name: aws-auth
   namespace: kube-system
-  resourceVersion: "98026"
+  resourceVersion: "1514"
   selfLink: /api/v1/namespaces/kube-system/configmaps/aws-auth
-  uid: 414c6bae-79e4-4f24-a1d5-d30e615c904c
+  uid: 80c98ad9-0c93-4ba8-a5f4-61957a83d844
