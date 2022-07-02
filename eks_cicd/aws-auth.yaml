@@ -4,12 +4,12 @@ data:
     - groups:
       - system:bootstrappers
       - system:nodes
-      rolearn: arn:aws:iam::931728113463:role/EKSWorkerNodeRole
+      rolearn: arn:aws:iam::931728113463:role/eksctl-cicd-demo-v2-nodegroup-eks-NodeInstanceRole-7D9AFFFFA5VP
       username: system:node:{{EC2PrivateDNSName}}
-    - groups:
-      - system:masters
-      rolearn: arn:aws:iam::931728113463:role/service-role/codebuild-cicd-eks-build-service-role
-      username: codebuild-cicd-eks-build-service-role
+     - groups:
+     - system:masters
+     rolearn: arn:aws:iam::931728113463:role/codebuild-cicd-eks-build-service-role
+     username: codebuild-cicd-eks-build-service-role
   mapUsers: |
     []
 kind: ConfigMap
