@@ -3,8 +3,8 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: cicd-demo
-    app.kubernetes.io/instance: cicd-demo-instance
-    app.kubernetes.io/version: "1.0.0"
+#    app.kubernetes.io/instance: cicd-demo-instance
+#    app.kubernetes.io/version: "1.0.0"
     app.kubernetes.io/component: backend
     app.kubernetes.io/managed-by: kubectl
   name: cicd-demo
