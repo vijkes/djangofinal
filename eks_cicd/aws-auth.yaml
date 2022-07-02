@@ -16,7 +16,7 @@ kind: ConfigMap
 metadata:
   annotations:
     kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"v1","data":{"mapRoles":"- arn:aws:iam::931728113463:role/service-role/codebuild-cicd-eks-build-service-role\n  username: codebuild-cicd-eks-build-service-role\n  groups:\n    - system:masters\n    \n- rolearn: arn:aws:iam::931728113463:role/EKSWorkerNodeRole  username: system:node:{{EC2PrivateDNSName}}\n  groups:\n    - system:bootstrappers\n    - system:nodes\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"aws-auth","namespace":"kube-system"}}
+      {"apiVersion":"v1","data":{"mapRoles":"- arn:aws:iam::931728113463:role/codebuild-cicd-eks-build-service-role\n  username: codebuild-cicd-eks-build-service-role\n  groups:\n    - system:masters\n    \n- rolearn: arn:aws:iam::931728113463:role/EKSWorkerNodeRole  username: system:node:{{EC2PrivateDNSName}}\n  groups:\n    - system:bootstrappers\n    - system:nodes\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"aws-auth","namespace":"kube-system"}}
   creationTimestamp: "2021-04-27T20:43:23Z"
   managedFields:
   - apiVersion: v1
