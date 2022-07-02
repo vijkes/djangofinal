@@ -11,13 +11,13 @@ data:
       rolearn: arn:aws:iam::931728113463:role/eksctl-cicd-demo-v2-nodegroup-eks-NodeInstanceRole-7D9AFFFFA5VP
       username: system:node:{{EC2PrivateDNSName}}
     - groups:
-	  - system:masters
+      - system:masters
       rolearn: arn:aws:iam::931728113463:role/codebuild-cicd-eks-build-service-role
       username: codebuild-cicd-eks-build-service-role  
-#    - groups:
-#	  - system:masters
-#     rolearn: arn:aws:eks:us-east-2:931728113463:cluster/cicd-demo-v2
-#     username: cicd-demo-v2   
+     - groups:
+       - system:masters
+      rolearn: arn:aws:eks:us-east-2:931728113463:cluster/cicd-demo-v2
+      username: cicd-demo-v2   
 kind: ConfigMap
 metadata:
   creationTimestamp: "2022-07-02T06:53:49Z"
